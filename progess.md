@@ -8,7 +8,14 @@
 - [x] Point
 
 ### Easing
-- [x] easeInSine
-- [ ] easeOutSine
-- [ ] easeInOutSine
+- [x] sine
+- [x] quad
+- [ ] cubic
+- [ ] quart
+- [ ] quint
+- [ ] expo
+- [ ] circ
+- [ ] back
+- [ ] elastic
+- [x] bounce
 
