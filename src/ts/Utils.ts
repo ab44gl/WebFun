@@ -4,6 +4,12 @@ export class Point{
         public y:number,
     ){}
 }
+export class Size{
+    constructor(
+        public width:number,
+        public height:number,
+    ){}
+}
 export class Rect extends Point{
     constructor(
         public x:number,
