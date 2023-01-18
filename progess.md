@@ -8,3 +8,7 @@
 - [x] Point
 
 ### Easing
+- [x] easeInSine
+- [ ] easeOutSine
+- [ ] easeInOutSine
+
