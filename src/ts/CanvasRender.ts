@@ -7,7 +7,7 @@ export interface Paint {
     style?: "fill" | "stroke"
 }
 export class CanvasRender {
-    private ctx: CanvasRenderingContext2D
+    public ctx: CanvasRenderingContext2D
     constructor(public canvas: HTMLCanvasElement) {
         this.ctx = canvas.getContext('2d')!
     }
@@ -26,11 +26,13 @@ export class CanvasRender {
                 rect.x, rect.y,
                 rect.width, rect.height,
             )
+        }else{
+            this.ctx.strokeRect(
+                rect.x, rect.y,
+                rect.width, rect.height,
+            )
         }
-        this.ctx.strokeRect(
-            rect.x, rect.y,
-            rect.width, rect.height,
-        )
+       
     }
     drawCircle(p: Point, r: number, paint: Paint={}) {
         this.setPaint(paint)
