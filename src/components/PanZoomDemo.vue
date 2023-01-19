@@ -123,10 +123,11 @@ onMounted(() => {
 
 //mouse
 function onMouseDown(event: MouseEvent) {
-
+    repaint()
 
 }
 function onMouseUp(e: MouseEvent) {
+    repaint()
 }
 function onMouseScroll(event: WheelEvent) {
     repaint()
@@ -143,7 +144,6 @@ function repaint() {
 function onDraw(render: CanvasRender) {
     render.clear()
     const ctx = render.ctx
-
     ctx.save()
     camera.update(render)
     render.drawRect(
