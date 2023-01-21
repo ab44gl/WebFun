@@ -7,15 +7,38 @@ import { Point, Rect } from '../ts/Utils';
 const _canvas = ref<HTMLCanvasElement>()
 var canvas: HTMLCanvasElement
 var render: CanvasRender
+const points: Point[] = []
 onMounted(() => {
     canvas = _canvas.value!
     render = new CanvasRender(canvas)
+    canvas.addEventListener("mousedown", (e) => {
+        addPoint(new Point(e.offsetX, e.offsetY))
+    })
     repaint()
 })
-//-----------start here-------------------------------
 
+function addPoint(p: Point) {
+    points.push(p)
+    repaint()
+}
+//---------curve----------
+function slope(a: Point, b: Point) {
+    return (b.y - a.y) / (b.x - a.x);
+}
+function curveMaker(render: CanvasRender, points: Point[]) {
+
+    const ctx = render.ctx
+    ctx.beginPath();
+   
+    ctx.stroke();
+
+}
 function onDraw(render: CanvasRender) {
-    render.drawRect(new Rect(50, 50, 100, 50))
+    render.clear()
+    curveMaker(render,points)
+    points.forEach((e) => {
+        render.drawCircle(e, 5, { fillStyle: "red", style: "fill" })
+    })
 }
 function repaint() {
     onDraw(render)

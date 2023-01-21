@@ -18,11 +18,14 @@ onMounted(() => {
 })
 var step = 1 / 500
 var i = 0
+
 function onDraw(render: CanvasRender) {
+    const width = canvas.width
+    const height = canvas.height
     ///render.clear()
-    const drawEase = (v:number) => {
+    const drawEase = (v: number) => {
         render.drawCircle(
-            new Point(i * 500, 300 - v * 300), 1, { style: "fill" }
+            new Point(i * width, height - v * height), 1, { style: "fill" }
         )
     }
     //easing
@@ -32,10 +35,40 @@ function onDraw(render: CanvasRender) {
     //quad
     drawEase(Easing.easeInQuad(i))
     drawEase(Easing.easeOutQuad(i))
+    drawEase(Easing.easeInOutQuad(i))
+    //cubic
+    drawEase(Easing.easeInCubic(i))
+    drawEase(Easing.easeOutCubic(i))
+    drawEase(Easing.easeInOutCubic(i))
+    //quart
+    drawEase(Easing.easeInQuart(i))
+    drawEase(Easing.easeOutQuart(i))
+    drawEase(Easing.easeInOutQuart(i))
+    //quint
+    drawEase(Easing.easeInQuint(i))
+    drawEase(Easing.easeOutQuint(i))
+    drawEase(Easing.easeInOutQuint(i))
+    //expo
+    drawEase(Easing.easeInExpo(i))
+    drawEase(Easing.easeOutExpo(i))
+    drawEase(Easing.easeInOutExpo(i))
+    //circ
+    drawEase(Easing.easeInCirc(i))
+    drawEase(Easing.easeOutCirc(i))
+    drawEase(Easing.easeInOutCirc(i))
+    //back
+    drawEase(Easing.easeInBack(i))
+    drawEase(Easing.easeOutBack(i))
+    drawEase(Easing.easeInOutBack(i))
+    //elastic
+    drawEase(Easing.easeInElastic(i))
+    drawEase(Easing.easeOutElastic(i))
+    drawEase(Easing.easeInOutElastic(i))
     //bounce
     drawEase(Easing.easeInBounce(i))
     drawEase(Easing.easeOutBounce(i))
     drawEase(Easing.easeInOutBounce(i))
+    //
 
     i += step
     if (i > 1 || i <= 0) {
@@ -64,13 +97,20 @@ console.log(Easing.easeInQuad(0))
 </script>
 
 <template>
-    <canvas ref="_canvas" width="500" height="300">
-
-    </canvas>
+    <div class="center">
+        <canvas ref="_canvas" width="300" height="300"></canvas>
+    </div>
 </template>
 
 <style scoped>
 canvas {
     border: 1px solid black;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
 }
 </style>
