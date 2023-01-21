@@ -15,7 +15,7 @@ onMounted(() => {
 //-----------start here-------------------------------
 enum State {
     MOVE_RIGHT, MOVE_LEFT, MOVE_UP,
-    MOVE_DOWN, WAIT, START, STOP, SPEED
+    MOVE_DOWN, WAIT, START, STOP, SPEED, GOTO
 }
 class Command {
     constructor(
@@ -64,11 +64,8 @@ class Turtle {
             //check if empty or not
             if (this.commandList.length > 0) {
                 //wait
-                this.lastTime += deltaTime
-                if (this.lastTime > 1000) {
-                    this.lastTime = 0
-                    this.currentCommand = this.advanceCommand()
-                }
+                this.currentCommand = this.advanceCommand()
+
             }
         }
         else if (state == State.MOVE_RIGHT) {
@@ -106,6 +103,10 @@ class Turtle {
                 this.lastTime = 0
             }
         }
+        // else if (state == State.GOTO) {
+
+        //     this.currentCommand = this.advanceCommand()
+        // }
 
         //console.log(command)
         ///draw
@@ -159,9 +160,15 @@ class Turtle {
 }
 //start
 const turtle = ref(new Turtle())
-turtle.value
-    .speed(3).right(200).wait(1).down(50)
-    .speed(1).wait(1).left(200).down(50)
+
+
+setInterval(() => {
+    const x = Math.random() * 200 +100
+    const y = Math.random() * 100+100
+    turtle.value
+        .speed(Math.random() * 5 + 1).right(x).wait(Math.random() * 1).down(y)
+        .speed(Math.random() * 5 + 1).wait(Math.random() * 1).left(x).up(y)
+}, 1000)
 function onDraw(render: CanvasRender) {
     render.clear()
     turtle.value.run(render)
@@ -185,7 +192,7 @@ window.requestAnimationFrame(draw)
 </script>
 
 <template>
-    <div>{{ State[turtle.currentCommand.state] }} {{ turtle.checkPoint }} </div>
+    <div>{{ State[turtle.currentCommand.state] }}  </div>
     <div class="center">
         <canvas ref="_canvas" width="500" height="300"></canvas>
     </div>
