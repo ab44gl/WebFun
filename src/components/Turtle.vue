@@ -1,18 +1,9 @@
 
 <script setup lang='ts'>
-import { onMounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import { CanvasRender } from '../ts/CanvasRender';
+import { Demo } from '../ts/Demo';
 import { Point, Rect } from '../ts/Utils';
-
-const _canvas = ref<HTMLCanvasElement>()
-var canvas: HTMLCanvasElement
-var render: CanvasRender
-onMounted(() => {
-    canvas = _canvas.value!
-    render = new CanvasRender(canvas)
-    repaint()
-})
-//-----------start here-------------------------------
 enum State {
     MOVE_RIGHT, MOVE_LEFT, MOVE_UP,
     MOVE_DOWN, WAIT, START, STOP, SPEED, GOTO
@@ -57,10 +48,18 @@ class Turtle {
         return command
     }
 
-    run(render: CanvasRender) {
+    run(render: CanvasRender, deltaTime: number) {
         //manage state
         const state = this.currentCommand.state
         if (state == State.START) {
+            //check if empty or not
+            if (this.commandList.length > 0) {
+                //wait
+                this.currentCommand = this.advanceCommand()
+
+            }
+        }
+        if (state == State.STOP) {
             //check if empty or not
             if (this.commandList.length > 0) {
                 //wait
@@ -158,41 +157,44 @@ class Turtle {
         return this
     }
 }
-//start
+const _canvas = ref<HTMLCanvasElement>()
 const turtle = ref(new Turtle())
+const demo = new class extends Demo {
+    tid = 0
+    constructor() {
+        super()
+        this.setAnimation(true)
+    }
+    protected onUpdate(): void {
+        const render = this.render
+        render.clear()
+        turtle.value.run(render, this.frameTime)
 
-
-setInterval(() => {
-    const x = Math.random() * 200 +100
-    const y = Math.random() * 100+100
-    turtle.value
-        .speed(Math.random() * 5 + 1).right(x).wait(Math.random() * 1).down(y)
-        .speed(Math.random() * 5 + 1).wait(Math.random() * 1).left(x).up(y)
-}, 1000)
-function onDraw(render: CanvasRender) {
-    render.clear()
-    turtle.value.run(render)
-
-}
-function repaint() {
-    onDraw(render)
-}
-//only for animation
-var _lastTime = performance.now()
-var deltaTime = 0
-function draw(t: any) {
-    deltaTime = t - _lastTime
-    repaint()
-    window.requestAnimationFrame(draw)
-    _lastTime = t
-}
-window.requestAnimationFrame(draw)
-
+    }
+    protected oncreate(): void {
+        this.tid = setInterval(() => {
+            const x = Math.random() * 200 + 100
+            const y = Math.random() * 100 + 100
+            turtle.value
+                .speed(Math.random() * 10 + 1).right(x).wait(Math.random() * 1).down(y)
+                .speed(Math.random() * 10 + 1).wait(Math.random() * 1).left(x).up(y)
+        }, 2000)
+    }
+    protected onDestroy(): void {
+        clearInterval(this.tid)
+    }
+}()
+onMounted(() => {
+    demo.create(_canvas.value!)
+})
+onUnmounted(() => {
+    demo.destroy()
+})
 
 </script>
 
 <template>
-    <div>{{ State[turtle.currentCommand.state] }}  </div>
+    <div>{{ State[turtle.currentCommand.state] }} </div>
     <div class="center">
         <canvas ref="_canvas" width="500" height="300"></canvas>
     </div>

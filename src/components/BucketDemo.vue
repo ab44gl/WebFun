@@ -1,6 +1,6 @@
 
 <script setup lang='ts'>
-import { onMounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import { CanvasRender } from '../ts/CanvasRender';
 import { Point, Rect } from '../ts/Utils';
 
@@ -49,6 +49,7 @@ function onDraw(render: CanvasRender) {
         else if (command == Command.MOVE_RIGHT) {
             pos.x += speed
             if (pos.x > stopPoint[2].x) {
+                pos.x=stopPoint[2].x
                 command = Command.MOVE_DOWN
             }
         }
@@ -92,14 +93,17 @@ function repaint() {
 //only for animation
 var lastTime = performance.now()
 var deltaTime = 0
+var id = 0
 function draw(t: any) {
     deltaTime = t - lastTime
     repaint()
-    window.requestAnimationFrame(draw)
+    id = window.requestAnimationFrame(draw)
     lastTime = t
 }
-window.requestAnimationFrame(draw)
-
+id = window.requestAnimationFrame(draw)
+onUnmounted(() => {
+    window.cancelAnimationFrame(id)
+})
 
 </script>
 

@@ -1,31 +1,33 @@
 
 <script setup lang='ts'>
-import { onMounted, ref } from 'vue';
-import { CanvasRender } from '../ts/CanvasRender';
+import { onMounted, onUnmounted, ref } from 'vue';
+import { Demo } from '../ts/Demo';
 import { Point, Rect } from '../ts/Utils';
 
 const _canvas = ref<HTMLCanvasElement>()
-var canvas: HTMLCanvasElement
-var render: CanvasRender
+const demo = new class extends Demo {
+    constructor() {
+        super()
+        //this.setAnimation(true)
+    }
+    protected onUpdate(): void {
+        const render=this.render
+        render.clear()
+        render.drawRect(new Rect(10,10,100,100))
+    }
+    protected oncreate(): void {
+        this.repaint()
+    }
+    protected onDestroy(): void {
+    }
+}()
 onMounted(() => {
-    canvas = _canvas.value!
-    render = new CanvasRender(canvas)
-    repaint()
+    demo.create(_canvas.value!)
 })
-//-----------start here-------------------------------
+onUnmounted(() => {
+    demo.destroy()
+})
 
-function onDraw(render: CanvasRender) {
-    render.drawRect(new Rect(50, 50, 100, 50))
-}
-function repaint() {
-    onDraw(render)
-}
-//only for animation
-// function draw() {
-//     repaint()
-//     window.requestAnimationFrame(draw)
-// }
-// window.requestAnimationFrame(draw)
 
 
 </script>
